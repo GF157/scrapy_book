@@ -11,7 +11,15 @@ import time
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 import logging
 
+
 class ProxyMiddleWare(object):
+
+
+    def __int__(self):
+        self.get_url = "http://proxy.1again.cc:35050/api/v1/proxy/?region=中国"
+        self.temp_url = ""
+
+
     # """docstring for ProxyMiddleWare"""
     def process_request(self,request, spider):
         # '''对request对象加上proxy'''
@@ -33,16 +41,18 @@ class ProxyMiddleWare(object):
         return response
 
     def get_random_proxy(self):
-        # '''随机从文件中读取proxy'''
-        while 1:
-            with open('D:\\Program Files\\testproxy\\proxies.txt', 'r') as f:
-                proxies = f.readlines()
-            if proxies:
-                break
-            else:
-                time.sleep(1)
-        proxy = random.choice(proxies).strip()
-        return proxy
+        # # '''随机从文件中读取proxy'''
+        # while 1:
+        #     with open('D:\\Program Files\\testproxy\\proxies.txt', 'r') as f:
+        #         proxies = f.readlines()
+        #     if proxies:
+        #         break
+        #     else:
+        #         time.sleep(1)
+
+        # proxy = random.choice(proxies).strip()
+        # return proxy
+        pass
 
 
 class BooksSpiderMiddleware(object):
@@ -139,23 +149,7 @@ class BooksDownloaderMiddleware(object):
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
-# useragent池
-class RandomUserAgent(object):
-    def __init__(self, user_agent):
-        self.user_agent = user_agent
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        # 从settings中加载USER_AGENT的值
-        return cls(
-            user_agent=crawler.settings.getlist('USER_AGENT')
-        )
-
-    def process_request(self, request, spider):
-        # 在process_request中设置User-Agent的值
-        request.headers.setdefault('User-Agent', random.choice(self.user_agent))
-
-
+#UserAgent代理
 class RotateUserAgentMiddleware(UserAgentMiddleware):
     def __int__(self, user_agent=''):
         self.user_agent = user_agent

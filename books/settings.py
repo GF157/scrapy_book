@@ -8,7 +8,7 @@
 #     https://doc.scrapy.org/en/latest/topics/settings.html
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
+import random
 BOT_NAME = 'books'
 
 SPIDER_MODULES = ['books.spiders']
@@ -16,6 +16,7 @@ NEWSPIDER_MODULE = 'books.spiders'
 # IMAGES_STORE = "D:\\book\\images"
 # FEED_EXPORT_ENCODING='UTF8' # 输出json为中文
 FEED_EXPORT_ENCODING ='gb18030'# 输出csv为中文
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = [		"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
 #                     "Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11",
@@ -54,7 +55,9 @@ CONCURRENT_REQUESTS = 32
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0
+
+# DOWNLOAD_DELAY =  # 随机生成浮点数 最后一位代表保留2位小数
+
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
