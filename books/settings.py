@@ -87,8 +87,9 @@ DOWNLOADER_MIDDLEWARES = {
     # 'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware':None,
     # 'books.middlewares.ProxyMiddleWare':125,
     # 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware':None
-    'books.middlewares.IPProxyMiddleWare': None,
-    'books.middlewares.IPProxySelfMiddleWare': 125,
+    'books.middlewares.IPProxyMiddleWare': None, # IP代理池1
+    'books.middlewares.IPProxySelfMiddleWare': None, # IP代理池2
+    'books.middlewares.IPProxyPoolMiddleWare': 125, # IP代理池3
     'books.middlewares.RotateUserAgentMiddleware': 125,
 }
 

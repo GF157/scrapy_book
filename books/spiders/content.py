@@ -147,6 +147,7 @@ class NewsSpider(scrapy.Spider):
                 item['one'] = 0
 
             yield item
+            print(item)
             # postitem = dict(item)
             # tes.insert(postitem)
 
@@ -154,7 +155,11 @@ class NewsSpider(scrapy.Spider):
         else:
 
             item['url'] = response.url
-            item['title'] = response.xpath('//h1/span/text()').extract()[0]
+            try:
+                item['title'] = response.xpath('//*[@id="wrapper"]/h1/span/text()').extract()[0]
+            except:
+                print("No find title!")
+                item['title'] = 0
 
             try:
                 item['score'] = response.xpath('//div[@id="interest_sectl"]//strong/text()').extract()[0].replace(' ','')
@@ -229,6 +234,7 @@ class NewsSpider(scrapy.Spider):
 
             yield Request(response.url + 'doings')
             yield item
+            print(item)
 
         # data={
         #     '书名' : item['title'],

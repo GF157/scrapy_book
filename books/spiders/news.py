@@ -33,6 +33,7 @@ from books.items import BooksItem
 import scrapy
 
 
+
 class Spider(scrapy.Spider):
     name = 'news'
     allowed_domains = []
@@ -45,5 +46,6 @@ class Spider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self,response):
+        pass
         # ip=response.xpath('//div[@class="notediv"]/h1/span/text()').extract()[0]
         print(response.text)

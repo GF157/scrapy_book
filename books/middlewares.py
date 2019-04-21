@@ -200,7 +200,7 @@ class RotateUserAgentMiddleware(UserAgentMiddleware):
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:2.0.1) Gecko/20100101 Firefox/4.0.1"
     ]
 
-#ip代理
+# ip代理池1
 class IPProxyMiddleWare(object):
 
     def __init__(self):
@@ -234,11 +234,10 @@ class IPProxyMiddleWare(object):
             self.getIPData()
             print("this is request ip:" + self.ip_list)
             request.meta["proxy"] = "http://" + self.ip_list
-            return request
 
         else:
             self.count = self.count - 1
-
+# ip代理池2
 class IPProxySelfMiddleWare(object):
     def __init__(self):
         self.ip = ""
@@ -251,9 +250,9 @@ class IPProxySelfMiddleWare(object):
         ip = ip_ports[self.count][0]
         port = ip_ports[self.count][1]
         grade = ip_ports[self.count][2]
-        if grade <= 7:
-            self.count += 1
-            self.getIPData()
+        # if grade <= 7:
+        #     self.count += 1
+        #     self.getIPData()
         self.ip = 'http://%s:%s' % (ip, port)
         self.evecount = 1
 
@@ -267,6 +266,7 @@ class IPProxySelfMiddleWare(object):
             self.count = self.count + 1
 
         self.evecount += 1
+        print(self.ip)
         request.meta["proxy"] = self.ip
 
 
@@ -283,6 +283,28 @@ class IPProxySelfMiddleWare(object):
         # r = requests.get('http://httpbin.org/get', proxies=proxies)
         # r.encoding = 'utf-8'
         # print(r.text)
+# ip代理池3 (最快)
+class IPProxyPoolMiddleWare(object):
+
+    def __init__(self):
+        self.get_url = 'http://127.0.0.1:5010/get/'
+        self.ip = ''
+        self.count = 0
+        self.evecount = 0
+
+    def getIPData(self):
+        temp_data = requests.get(url=self.get_url).text
+        self.ip = temp_data
+        self.count = 0  # 间隔 数字越大 本机ip使用频率越高 速度越快  为0（全部走代理）
+
+    def process_request(self, request, spider):
+        if self.count == 0:
+            self.getIPData()
+            print("this is request ip:" + self.ip)
+            self.ip = 'http://%s' % self.ip
+            request.meta["proxy"] = self.ip
+        else:
+            self.count = self.count - 1
 
 
 
