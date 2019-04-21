@@ -1,0 +1,14 @@
+*.json
+
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+*.pyc
