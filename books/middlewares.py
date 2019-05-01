@@ -13,6 +13,8 @@ import logging
 import requests
 import re
 import json
+from selenium.common.exceptions import TimeoutException
+from scrapy.http import HtmlResponse
 
 
 
@@ -288,24 +290,61 @@ class IPProxyPoolMiddleWare(object):
 
     def __init__(self):
         self.get_url = 'http://127.0.0.1:5010/get/'
+        self.temp_data = 'http://httpbin.org/get'
         self.ip = ''
         self.count = 0
-        self.evecount = 0
+        self.ret = 0
 
     def getIPData(self):
-        temp_data = requests.get(url=self.get_url).text
-        self.ip = temp_data
-        self.count = 0  # 间隔 数字越大 本机ip使用频率越高 速度越快  为0（全部走代理）
+        self.ret = requests.get(url=self.get_url).text
+        self.ip = self.ret
+        self.count = 10  # 间隔 数字越大 本机ip使用频率越高 速度越快  为0（全部走代理）
+        self.ip = 'http://%s' % self.ip
+
+
 
     def process_request(self, request, spider):
         if self.count == 0:
             self.getIPData()
-            print("this is request ip:" + self.ip)
-            self.ip = 'http://%s' % self.ip
-            request.meta["proxy"] = self.ip
         else:
             self.count = self.count - 1
+        try:
+            requests.get(url=self.temp_data, proxies={"http": self.ip}, timeout=5)
+        except:
+            # self.getIPData()
+            requests.get("http://127.0.0.1:5010/delete/?proxy={}".format(self.ret))
+            self.count = 0
+            return None
+        else:
+            request.meta["proxy"] = self.ip
 
+
+        # retry_count = 5
+        # while retry_count > 0:
+        #     try:
+        #         html = requests.get('http://httpbin.org/get', proxies={"http": self.ip})
+        #         # 使用代理访问
+        #         return html
+        #         request.meta["proxy"] = self.ip
+        #     except Exception:
+        #         retry_count -= 1
+        # # 出错5次, 删除代理池中代理
+        # requests.get("http://127.0.0.1:5010/delete/?proxy={}".format(self.ip))
+        # return None
+
+# 无头浏览器 Selenium
+class SeleniumMiddleware(object):
+    def process_request(self, request, spider):
+        if spider.name == 'jd':
+            try:
+                spider.browser.get(request.url)
+                spider.browser.execute_script('window.scrollTo(0, document.body.scrollHeight)')
+            except TimeoutException as e:
+                print('超时')
+                spider.browser.execute_script('window.stop()')
+            time.sleep(2)
+            return HtmlResponse(url=spider.browser.current_url, body=spider.browser.page_source,
+                                encoding="utf-8", request=request)
 
 
 

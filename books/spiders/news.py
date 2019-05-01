@@ -42,7 +42,7 @@ class Spider(scrapy.Spider):
 
         url = 'http://httpbin.org/get'
 
-        for i in range(10):
+        for i in range(30):
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self,response):

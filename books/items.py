@@ -29,7 +29,10 @@ class BooksItem(scrapy.Item):
     # pages = scrapy.Field()
 
     # 定价
-    # price = scrapy.Field()
+    price = scrapy.Field()
+
+    # 电商价
+    price_d = scrapy.Field()
 
     # 标签
     label = scrapy.Field()
@@ -81,5 +84,26 @@ class BooksItem(scrapy.Item):
 
     # 五星
     five = scrapy.Field()
+
+    # 短评
+    short = scrapy.Field()
+
+    # 短评数量
+    short_number = scrapy.Field()
+
+    # 书评数量
+    book_number = scrapy.Field()
+
+    # 笔记数量
+    note_number = scrapy.Field()
+
+    # 在读日期
+    reading_date = scrapy.Field()
+
+    # 读过日期
+    read_date = scrapy.Field()
+
+    # 想读日期
+    readw_date = scrapy.Field()
 
 

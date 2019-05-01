@@ -5,34 +5,54 @@ import re
 import pymongo
 import random
 import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 client = pymongo.MongoClient('localhost', 27017)
 book = client['book']
-all = book['421_11']
-tes = book['421_22']
+all = book['4281']
+tes = book['4282']
 
 
 class NewsSpider(scrapy.Spider):
     name = 'content'
     allowed_domains = ['douban.com']
 
+    # selenium 无头模式
+    # def __init__(self):
+    #     chrome_options = Options()
+    #     chrome_options.add_argument('--headless')
+    #     self.browser = webdriver.Chrome(chrome_options=chrome_options)
+    #     self.browser.set_page_load_timeout(30)
+    #
+    # def closed(self, spider):
+    #     print("spider closed")
+    #     self.browser.close()
+
     def start_requests(self):
 
         start_urls = [
-            'https://book.douban.com/tag/%E4%BA%92%E8%81%94%E7%BD%91',  # 互联网
-            'https://book.douban.com/tag/%E7%BC%96%E7%A8%8B',  # 编程
-            'https://book.douban.com/tag/%E4%BA%A4%E4%BA%92%E8%AE%BE%E8%AE%A1',  # 交互设计
-            'https://book.douban.com/tag/%E7%AE%97%E6%B3%95',  # 算法
-            'https://book.douban.com/tag/web',  # web
-            'https://book.douban.com/tag/UE',  # UE
-            'https://book.douban.com/tag/%E4%BA%A4%E4%BA%92',  # 交互
-            'https://book.douban.com/tag/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C',  # 神经网络
-            'https://book.douban.com/tag/%E7%A8%8B%E5%BA%8F',  # 程序
+
+                        'https://book.douban.com/tag/%E9%80%9A%E4%BF%A1',  # 通信
+                        'https://book.douban.com/tag/%E7%A7%91%E6%8A%80',  # 科技
+                        'https://book.douban.com/tag/%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C',  # 用户体验
+                        'https://book.douban.com/tag/%E4%BA%92%E8%81%94%E7%BD%91',  # 互联网
+                        'https://book.douban.com/tag/%E7%BC%96%E7%A8%8B',  # 编程
+                        'https://book.douban.com/tag/%E4%BA%A4%E4%BA%92%E8%AE%BE%E8%AE%A1',  # 交互设计
+                        'https://book.douban.com/tag/%E7%AE%97%E6%B3%95',  # 算法
+                        'https://book.douban.com/tag/web',  # web
+                        'https://book.douban.com/tag/UE',  # UE
+                        'https://book.douban.com/tag/%E4%BA%A4%E4%BA%92',  # 交互
+                        'https://book.douban.com/tag/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C',  # 神经网络
+                        'https://book.douban.com/tag/%E7%A8%8B%E5%BA%8F',  # 程序
+                        'https://book.douban.com/tag/UCD',  # UCD
 
         ]
 
+        # cook = "{'bid': 'qnrg-Om6HSo', 'gr_user_id': 'adbd942a-6e95-40c6-be0f-d2fc0114e81b', '_vwo_uuid_v2': 'DEF3C8C1A63D796DBFDC8E1F0895BDADB|026bb6ddc7dfa0977cfd98309e6412c0', 'll': '118172', 'Hm_lvt_6e5dcf7c287704f738c7febc2283cf0c': '1555329797,1555424331,1555431024,1555513908', 'douban-fav-remind': '1', '_ga': 'GA1.2.113169978.1553871196', 'ct': 'y', '__utmc': '81379588', 'viewed': '26929955_5375620_26582822_27030507_1767945_24738302_26838557_27168433_1119944_26834485', 'dbcl2': '146494461:ssWrzbB2DTI', 'ck': 'Uu4j', '_pk_ref.100001.3ac3': '%5B%22%22%2C%22%22%2C1556510481%2C%22https%3A%2F%2Faccounts.douban.com%2Fpassport%2Flogin%3Fredir%3Dhttps%253A%252F%252Fbook.douban.com%252Ftag%252F%2525E7%2525AE%252597%2525E6%2525B3%252595%253Fstart%253D420%2526type%253DT%22%5D', '_pk_id.100001.3ac3': '7cd6ce805e596b91.1553871196.32.1556510481.1556497709.', '_pk_ses.100001.3ac3': '*', '__utma': '81379588.468017531.1553871196.1556497515.1556510481.31', '__utmz': '81379588.1556510481.31.6.utmcsr', '__utmt_douban': '1', '__utmb': '81379588.1.10.1556510481', '__utmt': '1', 'push_doumail_num': '0', 'push_noty_num': '3'}"
+
         for url in start_urls:
-            yield Request(url=url, callback=self.parse)
+            yield Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         urls = [
@@ -45,17 +65,20 @@ class NewsSpider(scrapy.Spider):
             'https://book.douban.com/tag/%E4%BA%A4%E4%BA%92',  # 交互
             'https://book.douban.com/tag/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C',  # 神经网络
             'https://book.douban.com/tag/%E7%A8%8B%E5%BA%8F',  # 程序
+            'https://book.douban.com/tag/UCD',  # UCD
+            'https://book.douban.com/tag/%E9%80%9A%E4%BF%A1',  # 通信
+            'https://book.douban.com/tag/%E7%A7%91%E6%8A%80',  # 科技
+            'https://book.douban.com/tag/%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C'  # 用户体验
         ]
 
-        result = (response.url.split('?')[0]) in urls
-
+        result = (response.url.split('?')[0]) in urls # 判断是否为列表页
         ret = 'doings'
         item = BooksItem()
 
-        # wait = round(random.uniform(1, 2), 2)
-        # time.sleep(wait)
-        # print("间隔时间:")
-        # print(wait)
+        wait = round(random.uniform(0, 1), 2)
+        time.sleep(wait)
+        print("间隔时间:")
+        print(wait)
 
 
         if result:
@@ -64,8 +87,11 @@ class NewsSpider(scrapy.Spider):
                 yield Request(href)
             print(response.url)
             # yield下一页链接
-            next = response.xpath('//span[@class="next"]/link/@href').extract_first()
-            if next != None:
+            try:
+                next = response.xpath('//span[@class="next"]/link/@href').extract_first()
+            except:
+                return None
+            if next:
                 next_url = 'https://book.douban.com' + next
                 yield Request(next_url)
 
@@ -120,6 +146,12 @@ class NewsSpider(scrapy.Spider):
                 item['publish_date'] = re.findall(r'\d*-\d+', date)[0]
             except:
                 item['publish_date'] = 0
+
+            try:
+                item['price'] = re.findall(r'定价:</span>:(\d*.\d*)<br>', base_info)[0]
+            except:
+                item['price'] = 0
+
             try:
                 item['score'] = response.xpath('//*[@id="content"]/div/div[1]/div[1]/div[1]/p/strong/text()').extract()[0]
             except:
@@ -145,11 +177,19 @@ class NewsSpider(scrapy.Spider):
             except:
                 print('can not find distr')
                 item['one'] = 0
+                item['two'] = 0
+                item['three'] = 0
+                item['four'] = 0
+                item['five'] = 0
+            try:
+                item['reading_date'] = response.xpath('//div[@class="sub_ins"]//tr/td//p[@class="pl"]/span[1]/text()').extract()[0]
+            except:
+                item['reading_date'] = 0
 
-            yield item
-            print(item)
-            # postitem = dict(item)
-            # tes.insert(postitem)
+
+
+            postitem = dict(item)
+            tes.insert(postitem)
 
 
         else:
@@ -173,15 +213,24 @@ class NewsSpider(scrapy.Spider):
                 print("未找到评分人数")
                 item['number'] = 0
 
-            base_info = response.xpath('//div[@id="info"]').extract()[0].replace('\n', '')
+            base_info = response.xpath('//div[@id="info"]').extract()[0].replace('\n', '').replace(' ', '')
 
             try:
                 author = re.findall(r"作者(.*?)</a>", base_info, re.S)[0]
                 part = re.compile(r'">(.*)')
-                item['author'] = part.findall(author)[0].replace(' ', '')
+                item['author'] = part.findall(author)[0]
             except:
                 print("No find author!")
                 item['author'] = 0
+
+            try:
+                part = re.findall(r"译者</span>(.*?)</a>", base_info, re.S)[0]
+                ret = re.compile(r'">(.*)')
+                item['trans'] = ret.findall(part)[0]
+            except:
+                print("trans find error!")
+                item['trans'] = 0
+
 
             try:
                 press = re.findall(r'出版社(.*?)<br>', base_info)[0]
@@ -191,38 +240,40 @@ class NewsSpider(scrapy.Spider):
             except:
                 print("No find press!")
                 item['press'] = 0
+            try:
+                item['price'] = re.findall(r'定价:</span>:(.*?)<br>', base_info)[0]
+            except:
+                item['price'] = 0
 
 
             try:
-                publish_date = re.findall(r'出版年(.*?)<br>', base_info)[0]
-                pat = re.compile(r'</span>(.*)')
-                date = pat.findall(publish_date)[0]
-                date = re.findall(r'(\d\d\d\d)', date)[0]
-                item['publish_date'] = date
+                ret = re.findall(r'出版年(.*?)<br>', base_info)[0]
+                ret = re.findall(r'\d*-\d+', ret)[0]
+                item['publish_date'] = ret
             except:
                 print("No find date!")
                 item['publish_date'] = 0
 
-            item['ISBN'] = re.findall(r'ISBN:</span> (\d*)', base_info)[0]
+            item['ISBN'] = re.findall(r'ISBN:</span>(\d*)', base_info)[0]
 
 
             try:
                 read = response.xpath('//div[@id="collector"]/p/a/text()').extract()
                 item['reading'] = re.findall(r'(\d*)人在读', read)[0]
             except:
-                print("reading find error!")
+                # print("reading find error!")
                 item['reading'] = 0
 
             try:
                 item['read'] = re.findall(r'(\d*)人读过', read)[0]
             except:
-                print("read find error!")
+                # print("read find error!")
                 item['read'] = 0
 
             try:
                 item['read_want'] = re.findall(r'(\d*)人想读', read)[0]
             except:
-                print('read_want find error!')
+                # print('read_want find error!')
                 item['read_want'] = 0
 
             try:
@@ -232,9 +283,52 @@ class NewsSpider(scrapy.Spider):
                 item['label'] = 0
             item['image'] = response.xpath('//*[@id="mainpic"]/a/img/@src').extract()[0]
 
+            try:
+                item['short'] = response.xpath('//*[@id="comments"]//p[@class="comment-content"]/span/text()').extract()
+            except:
+                item['short'] = 0
+            try:
+                ret = response.xpath('//div[@id="buyinfo-ebook"]//li//text()').extract()
+                item['price_d'] = re.findall(r'(\d*.\d*)', ret)[0]
+            except:
+                item['price_d'] = 0
+
+            try:
+                ret = response.xpath('//div[@class="mod-hd"]/h2/span/a/text()').extract()[0]
+                item['short_number'] = re.findall(r'(\d+)', ret)[0]
+            except:
+                item['short_number'] = 0
+
+            try:
+                ret = response.xpath('//section[@class="reviews mod book-content"]//h2/span/a/text()').extract()[0]
+                item['book_number'] = re.findall(r'(\d+)', ret)[0]
+            except:
+                item['book_number'] = 0
+
+            try:
+                ret = response.xpath('//div[@class="ugc-mod reading-notes"]//span/a/span/text()').extract()[0]
+                item['note_number'] = ret
+            except:
+                item['note_number'] = 0
+
+            try:
+                distr = response.xpath('//div[@class="rating_wrap clearbox"]').extract()[0].replace('\n', '').replace(' ', '')
+                part = re.compile("(\d*.\d*)%")
+                item['one'] = part.findall(distr)[4]
+                item['two'] = part.findall(distr)[3]
+                item['three'] = part.findall(distr)[2]
+                item['four'] = part.findall(distr)[1]
+                item['five'] = part.findall(distr)[0]
+            except:
+                print('can not find distr')
+                item['one'] = 0
+                item['two'] = 0
+                item['three'] = 0
+                item['four'] = 0
+                item['five'] = 0
+
+
             yield Request(response.url + 'doings')
-            yield item
-            print(item)
 
         # data={
         #     '书名' : item['title'],
@@ -255,8 +349,8 @@ class NewsSpider(scrapy.Spider):
         #     '图书链接':item['url']
         # }
 
-        #     postitem = dict(item)
-        #     all.insert(postitem)
+            postitem = dict(item)
+            all.insert(postitem)
 
         # for items in all.find():
         #     yield items
