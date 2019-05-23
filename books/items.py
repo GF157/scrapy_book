@@ -10,6 +10,9 @@ import scrapy
 
 class BooksItem(scrapy.Item):
 
+    # 基本信息
+    info = scrapy.Field()
+
     # 书名
     title = scrapy.Field()
 
@@ -26,7 +29,7 @@ class BooksItem(scrapy.Item):
     publish_date = scrapy.Field()
 
     # 页数
-    # pages = scrapy.Field()
+    pages = scrapy.Field()
 
     # 定价
     price = scrapy.Field()
@@ -105,5 +108,8 @@ class BooksItem(scrapy.Item):
 
     # 想读日期
     readw_date = scrapy.Field()
+
+    # 手动tag
+    tag = scrapy.Field()
 
 

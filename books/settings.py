@@ -56,7 +56,7 @@ CONCURRENT_REQUESTS = 100
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 
-DOWNLOAD_DELAY = round(random.uniform(1, 4), 2)  # 随机生成浮点数 最后一位代表保留2位小数
+DOWNLOAD_DELAY = round(random.uniform(0, 0.2), 2)  # 随机生成浮点数 最后一位代表保留2位小数
 
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 100
@@ -68,10 +68,15 @@ COOKIES_ENABLED = False
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+# DEFAULT_REQUEST_HEADERS = {
+#     "Accept":'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+#     "Accept-Language":'zh-CN,zh;q=0.9',
+#     "Connection":'keep-alive',
+#     "Cookie":'bid=qnrg-Om6HSo; gr_user_id=adbd942a-6e95-40c6-be0f-d2fc0114e81b; _vwo_uuid_v2=DEF3C8C1A63D796DBFDC8E1F0895BDADB|026bb6ddc7dfa0977cfd98309e6412c0; ll="118172"; Hm_lvt_6e5dcf7c287704f738c7febc2283cf0c=1555329797,1555424331,1555431024,1555513908; douban-fav-remind=1; _ga=GA1.2.113169978.1553871196; ct=y; push_doumail_num=0; push_noty_num=0; __utmc=30149280; __utmc=81379588; ap_v=0,6.0; viewed="6709783_26792439_13205063_30330181_26708119_30459800_30418897_24703171_26829016_4107286"; dbcl2="146494461:SuWwL4rxqpU"; ck=5Kqs; gr_session_id_22c937bbd8ebd703f2d8e9445f7dfd03=a6acc7e6-511f-44d5-b2ff-b0259f6fdcd2; gr_cs1_a6acc7e6-511f-44d5-b2ff-b0259f6fdcd2=user_id%3A1; _pk_ref.100001.3ac3=%5B%22%22%2C%22%22%2C1557329878%2C%22https%3A%2F%2Faccounts.douban.com%2Fpassport%2Flogin%3Fredir%3Dhttps%253A%252F%252Fbook.douban.com%252F%22%5D; _pk_ses.100001.3ac3=*; __utma=30149280.113169978.1553871196.1557323274.1557329878.45; __utmz=30149280.1557329878.45.10.utmcsr=accounts.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/passport/login; __utmt_douban=1; __utma=81379588.468017531.1553871196.1557323274.1557329878.38; __utmz=81379588.1557329878.38.7.utmcsr=accounts.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/passport/login; __utmt=1; gr_session_id_22c937bbd8ebd703f2d8e9445f7dfd03_a6acc7e6-511f-44d5-b2ff-b0259f6fdcd2=true; _pk_id.100001.3ac3=7cd6ce805e596b91.1553871196.39.1557329897.1557326079.; __utmb=30149280.2.10.1557329878; __utmb=81379588.2.10.1557329878',
+#     "Host":'book.douban.com',
+#     "Referer":'https://book.douban.com/',
+#     "Upgrade-Insecure-Requests":'1',
+# }
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
@@ -83,8 +88,8 @@ COOKIES_ENABLED = False
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     # # 'books.middlewares.ProxyMiddleware': 543,
-    # 'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware':None,
-    # 'books.middlewares.ProxyMiddleWare':125,
+    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware':110,
+    'books.middlewares.ProxyMiddleware':100,
     # 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware':None
     'books.middlewares.IPProxyMiddleWare': None, # IP代理池1
     'books.middlewares.IPProxySelfMiddleWare': None, # IP代理池2
@@ -126,3 +131,16 @@ DOWNLOADER_MIDDLEWARES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# SCHEDULER_PERSIST = True
+# SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.SpiderQueue'
+#
+# #启用Redis调度存储请求队列
+# # SCHEDULER_PERSIST = True    #不清除Redis队列、这样可以暂停/恢复 爬取
+# # DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"  #确保所有的爬虫通过Redis去重
+# # SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.SpiderPriorityQueue'
+# REDIS_HOST = '127.0.0.1'  # 也可以根据情况改成 localhost
+# REDIS_PORT = 6379
+# REDIS_URL = None
